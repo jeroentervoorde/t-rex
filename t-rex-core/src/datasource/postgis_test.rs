@@ -208,6 +208,7 @@ fn test_feature_query() {
         minzoom: 0,
         maxzoom: Some(22),
         simplify: None,
+        clip: None,
         tolerance: None,
         sql: Some(String::from("SELECT geometry AS geom FROM osm_place_point")),
     }];
@@ -221,6 +222,7 @@ fn test_feature_query() {
         minzoom: 0,
         maxzoom: Some(22),
         simplify: None,
+        clip: None,
         tolerance: None,
         sql: Some(String::from(
             "SELECT * FROM osm_place_point WHERE name='Bern'",
@@ -248,6 +250,7 @@ fn test_query_params() {
                            minzoom: 0,
                            maxzoom: Some(22),
                            simplify: None,
+                           clip: None,
                            tolerance: None,
                            sql: Some(String::from("SELECT name, type, 0 as osm_id, ST_Union(geometry) AS way FROM osm_buildings_gen0 WHERE geometry && !bbox!")),
                        }];
@@ -262,6 +265,7 @@ fn test_query_params() {
                            minzoom: 0,
                            maxzoom: Some(22),
                            simplify: None,
+                           clip: None,
                            tolerance: None,
                            sql: Some(String::from("SELECT osm_id, geometry, typen FROM landuse_z13toz14n WHERE !zoom! BETWEEN 13 AND 14) AS landuse_z9toz14n")),
                        }];
@@ -276,6 +280,7 @@ fn test_query_params() {
                            minzoom: 0,
                            maxzoom: Some(22),
                            simplify: None,
+                           clip: None,
                            tolerance: None,
                            sql: Some(String::from("SELECT name, type, 0 as osm_id, ST_SimplifyPreserveTopology(ST_Union(geometry),!pixel_width!/2) AS way FROM osm_buildings")),
                        }];
@@ -325,6 +330,7 @@ fn test_retrieve_features() {
         minzoom: 0,
         maxzoom: Some(22),
         simplify: None,
+        clip: None,
         tolerance: None,
         sql: Some(String::from("SELECT * FROM ne.ne_10m_populated_places")),
     }];

@@ -13,6 +13,7 @@ pub struct LayerQuery {
     pub minzoom: u8,
     pub maxzoom: Option<u8>,
     pub simplify: Option<bool>,
+    pub clip: Option<bool>,
     pub tolerance: Option<String>,
     pub sql: Option<String>,
 }
@@ -39,6 +40,8 @@ pub struct Layer {
     pub tile_size: u32,
     /// Simplify geometry (lines and polygons)
     pub simplify: bool,
+    /// Clip geometry
+    pub clip: bool,
     /// Simplification tolerance (default to !pixel_width!/2)
     pub tolerance: String,
     /// Tile buffer size in pixels (None: no clipping)
@@ -100,6 +103,12 @@ impl Layer {
         let query_cfg = self.query_cfg(level, |q| q.simplify.is_some());
         query_cfg.and_then(|q| q.simplify).unwrap_or(self.simplify)
     }
+    /// clip config for zoom level
+    pub fn clip(&self, level: u8) -> bool {
+        let query_cfg = self.query_cfg(level, |q| q.clip.is_some());
+        query_cfg.and_then(|q| q.clip).unwrap_or(self.clip)
+    }
+
     /// tolerance config for zoom level
     pub fn tolerance(&self, level: u8) -> &String {
         let query_cfg = self.query_cfg(level, |q| q.tolerance.is_some());
@@ -131,6 +140,7 @@ impl<'a> Config<'a, LayerCfg> for Layer {
                 minzoom: lq.minzoom,
                 maxzoom: lq.maxzoom,
                 simplify: lq.simplify,
+                clip: lq.clip,
                 tolerance: lq.tolerance.clone(),
                 sql: lq.sql.clone(),
             })
@@ -157,6 +167,7 @@ impl<'a> Config<'a, LayerCfg> for Layer {
             maxzoom: layer_cfg.maxzoom,
             tile_size: layer_cfg.tile_size,
             simplify: layer_cfg.simplify,
+            clip: layer_cfg.clip,
             tolerance: layer_cfg.tolerance.clone(),
             buffer_size: layer_cfg.buffer_size,
             make_valid: layer_cfg.make_valid,

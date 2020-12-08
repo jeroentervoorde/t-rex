@@ -118,6 +118,9 @@ pub struct LayerQueryCfg {
     pub simplify: Option<bool>,
     /// Simplification tolerance (override layer default setting)
     pub tolerance: Option<String>,
+    // Clip geometries
+    pub clip: Option<bool>,
+
     pub sql: Option<String>,
 }
 
@@ -152,6 +155,9 @@ pub struct LayerCfg {
     pub tolerance: String,
     /// Tile buffer size in pixels (None: no clipping)
     pub buffer_size: Option<u32>,
+    #[serde(default)]
+    // Clip geometries
+    pub clip: bool,
     /// Fix invalid geometries before clipping (lines and polygons)
     #[serde(default)]
     pub make_valid: bool,

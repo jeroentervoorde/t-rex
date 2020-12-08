@@ -243,7 +243,7 @@ impl PostgisDatasource {
         };
 
         // Clipping
-        if layer.buffer_size.is_some() {
+        if layer.clip(zoom) {
             let valid_geom = if layer.make_valid {
                 format!("ST_MakeValid({})", geom_expr)
             } else {
