@@ -14,6 +14,7 @@ pub struct LayerQuery {
     pub maxzoom: Option<u8>,
     pub simplify: Option<bool>,
     pub clip: Option<bool>,
+    pub buffer_size: Option<u32>,
     pub tolerance: Option<String>,
     pub sql: Option<String>,
 }
@@ -109,6 +110,12 @@ impl Layer {
         query_cfg.and_then(|q| q.clip).unwrap_or(self.clip)
     }
 
+    /// clip config for zoom level
+    pub fn buffer_size(&self, level: u8) -> Option<u32> {
+        let query_cfg = self.query_cfg(level, |q| q.buffer_size.is_some());
+        query_cfg.and_then(|q| q.buffer_size).or(self.buffer_size)
+    }
+
     /// tolerance config for zoom level
     pub fn tolerance(&self, level: u8) -> &String {
         let query_cfg = self.query_cfg(level, |q| q.tolerance.is_some());
@@ -141,6 +148,7 @@ impl<'a> Config<'a, LayerCfg> for Layer {
                 maxzoom: lq.maxzoom,
                 simplify: lq.simplify,
                 clip: lq.clip,
+                buffer_size: lq.buffer_size,
                 tolerance: lq.tolerance.clone(),
                 sql: lq.sql.clone(),
             })

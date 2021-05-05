@@ -120,6 +120,8 @@ pub struct LayerQueryCfg {
     pub tolerance: Option<String>,
     // Clip geometries
     pub clip: Option<bool>,
+    // Buffer size (override layer default setting)
+    pub buffer_size: Option<u32>,
 
     pub sql: Option<String>,
 }

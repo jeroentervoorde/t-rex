@@ -354,7 +354,7 @@ impl PostgisDatasource {
         }
     }
     /// Build !bbox! replacement expression for feature query.
-    fn build_bbox_expr(&self, layer: &Layer, grid_srid: i32) -> String {
+    fn build_bbox_expr(&self, layer: &Layer, grid_srid: i32, zoom: u8) -> String {
         let layer_srid = layer.srid.unwrap_or(grid_srid); // we assume grid srid as default
         let env_srid = if layer_srid <= 0 || layer.no_transform {
             layer_srid
@@ -362,7 +362,7 @@ impl PostgisDatasource {
             grid_srid
         };
         let mut expr = format!("ST_MakeEnvelope($1,$2,$3,$4,{})", env_srid);
-        if let Some(pixels) = layer.buffer_size {
+        if let Some(pixels) = layer.buffer_size(zoom) {
             if pixels != 0 {
                 expr = format!("ST_Buffer({},{}*!pixel_width!)", expr, pixels);
             }
@@ -437,7 +437,7 @@ impl PostgisDatasource {
         if sqlquery.is_none() {
             return None;
         }
-        let bbox_expr = self.build_bbox_expr(layer, grid_srid);
+        let bbox_expr = self.build_bbox_expr(layer, grid_srid, zoom);
         let mut query = SqlQuery {
             sql: sqlquery.expect("sqlquery expected"),
             params: Vec::new(),
